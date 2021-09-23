@@ -1,0 +1,73 @@
+import pandas as pd
+import numpy as np
+from articles import articles
+from preprocessing import preprocess_text
+
+# import CountVectorizer, TfidfTransformer, TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
+
+# view article
+print(articles[1])
+
+# preprocess articles
+processed_articles = [preprocess_text(document) for document in articles]
+
+
+# initialize and fit CountVectorizer
+vectorizer = CountVectorizer()
+counts = vectorizer.fit_transform(processed_articles)
+transformer = TfidfTransformer(norm=None)
+# convert counts to tf-idf
+tfidf_scores_transformed = transformer.fit_transform(counts)
+
+
+# initialize and fit TfidfVectorizer
+vectorizer = TfidfVectorizer(norm=None)
+
+
+# check if tf-idf scores are equal
+tfidf_scores = vectorizer.fit_transform(processed_articles)
+if np.allclose(tfidf_scores_transformed.todense(), tfidf_scores.todense()):
+  print(pd.DataFrame({'Are the tf-idf scores the same?':['YES']}))
+else:
+  print(pd.DataFrame({'Are the tf-idf scores the same?':['No, something is wrong :(']}))
+for i in range(1, 10):
+  print(df_tf_idf[[f'Article {i}']].idxmax())
+
+
+# get vocabulary of terms
+try:
+  feature_names = vectorizer.get_feature_names()
+except:
+  pass
+
+# get article index
+try:
+  article_index = [f"Article {i+1}" for i in range(len(articles))]
+except:
+  pass
+
+# create pandas DataFrame with word counts
+try:
+  df_word_counts = pd.DataFrame(counts.T.todense(), index=feature_names, columns=article_index)
+  print(df_word_counts)
+except:
+  pass
+
+# create pandas DataFrame(s) with tf-idf scores
+try:
+  df_tf_idf = pd.DataFrame(tfidf_scores_transformed.T.todense(), index=feature_names, columns=article_index)
+  print(df_tf_idf)
+except:
+  pass
+
+try:
+  df_tf_idf = pd.DataFrame(tfidf_scores.T.todense(), index=feature_names, columns=article_index)
+  print(df_tf_idf)
+  for i in range(1, 10):
+    print(df_tf_idf[[f'Article {i}']].idxmax())
+
+except:
+  pass
+
+
